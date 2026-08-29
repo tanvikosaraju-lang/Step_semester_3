@@ -1,0 +1,20 @@
+class Voting
+{
+void checkVotingEligibility(int age)
+{
+if (age>=18)
+{
+System.out.println("Eligible to vote!\n");
+}
+else
+{
+System.out.println("Not eligible to vote!\n");
+}
+}
+public static void main(String[] args)
+{
+Voting v = new Voting();
+v.checkVotingEligibility(20);
+v.checkVotingEligibility(16);
+}
+}
