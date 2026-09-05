@@ -1,0 +1,60 @@
+import java.util.*;
+class Players implements Comparable<Players> 
+{
+String name;
+int matchesPlayed;
+double battingAverage;
+boolean injured;
+public Players(String name, int matchesPlayed, double battingAverage, boolean injured) 
+{
+this.name = name;
+this.matchesPlayed = matchesPlayed;
+this.battingAverage = battingAverage;
+this.injured = injured;
+}
+static boolean isDraftable(int matchesPlayed) 
+{
+return matchesPlayed >= 10;
+}
+static boolean isDraftable(int matchesPlayed, boolean injured) 
+{
+return matchesPlayed >= 5 && !injured;
+}
+public int compareTo(Players other) 
+{
+return Double.compare(other.battingAverage, this.battingAverage);
+}
+static String draftAndRank(Players[] players) 
+{
+ArrayList<Players> draftable = new ArrayList<>();
+for (Players p : players) 
+{
+if (isDraftable(p.matchesPlayed) || isDraftable(p.matchesPlayed, p.injured)) 
+{
+draftable.add(p);
+}
+}
+Players[] arr = draftable.toArray(new Players[0]);
+Arrays.sort(arr);
+String result = "";
+for (int i = 0; i < arr.length; i++) 
+{
+if (i > 0) 
+{
+result += " | ";
+}
+result += (i + 1) + ". " + arr[i].name;
+}
+return result;
+}
+public static void main(String[] args) 
+{
+Players[] players = {
+new Players("Virat", 15, 48.0, false),
+new Players("Rahul", 7, 55.0, false),
+new Players("Sameer", 3, 60.0, false),
+new Players("Dev", 12, 20.0, true)
+};
+System.out.println(draftAndRank(players));
+}
+}
