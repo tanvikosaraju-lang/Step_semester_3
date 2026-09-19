@@ -1,0 +1,30 @@
+class maxProfit 
+{
+public int maxProfit(int[] prices) 
+{
+if (prices == null || prices.length == 0) 
+{
+return 0;
+}
+int min = Integer.MAX_VALUE;
+int maxProfit = 0;
+for (int price : prices) 
+{
+if (price < min) 
+{
+ min = price;
+} 
+else if (price - min > maxProfit) 
+{
+maxProfit = price - min;
+}
+}
+return maxProfit;
+}
+public static void main(String[] args) 
+{
+maxProfit m = new maxProfit();
+int[] prices = {7, 1, 5, 3, 6, 4};
+System.out.println("Max Profit: " + m.maxProfit(prices));
+}
+}
