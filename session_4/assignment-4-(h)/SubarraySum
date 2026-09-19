@@ -1,0 +1,29 @@
+import java.util.*;
+class SubarraySum 
+{
+int subarraySum(int[] nums, int k) 
+{
+Map<Integer, Integer> prefixSumCount = new HashMap<>();
+prefixSumCount.put(0, 1);
+int currentSum = 0;
+int count = 0;
+for (int i = 0; i < nums.length; i++) 
+{
+currentSum += nums[i];
+if (prefixSumCount.containsKey(currentSum - k)) 
+{
+count += prefixSumCount.get(currentSum - k);
+}
+prefixSumCount.put(currentSum, prefixSumCount.getOrDefault(currentSum, 0) + 1);
+}
+return count;
+}
+public static void main(String[] args) 
+{
+SubarraySum solver = new SubarraySum();
+int result1 = solver.subarraySum(new int[]{1, 1, 1}, 2);
+System.out.println(result1);
+int result2 = solver.subarraySum(new int[]{1, -1, 0}, 0);
+System.out.println(result2);
+}
+}
