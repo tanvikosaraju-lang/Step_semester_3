@@ -1,0 +1,35 @@
+import java.util.*;
+class CustomerIdentityVerification 
+{
+public static String reverseCustomerName(String customerName) 
+{
+char[] chars = customerName.toCharArray();
+char[] reversed = new char[chars.length];
+for (int i = 0; i < chars.length; i++) 
+{
+reversed[i] = chars[chars.length - 1 - i];
+}
+return new String(reversed);
+}
+public static void main(String[] args) 
+{
+String[] testNames = {"Sunil","Ananya","Bob","Priya Sharma"};
+for (String name : testNames)
+{
+String reversed = reverseCustomerName(name);
+System.out.println("Original Name: " + name);
+System.out.println("Reversed Name: " + reversed);
+System.out.println();
+}
+Scanner s = new Scanner(System.in);
+System.out.print("Enter a customer name (or press Enter to skip): ");
+String userInput = s.nextLine();
+if (!userInput.isEmpty()) 
+{ 
+String reversed = reverseCustomerName(userInput);
+System.out.println("Original Name: " + userInput);
+System.out.println("Reversed Name: " + reversed);
+}
+s.close();
+}
+}

@@ -1,0 +1,68 @@
+import java.util.*;
+class WarehouseInventoryBalancer 
+{
+public static void analyzeInventory(int[] sectionA, int[] sectionB) 
+{
+if (sectionA.length != sectionB.length) 
+{
+System.out.println("Error: Section arrays must be of equal length.");
+return;
+}
+int totalA = 0;
+int totalB = 0;
+for (int i = 0; i < sectionA.length; i++) 
+{
+totalA += sectionA[i];
+}
+for (int i = 0; i < sectionB.length; i++) 
+{
+totalB += sectionB[i];
+}
+String status = (totalA == totalB) ? "Balanced" : "Not Balanced";
+int highestQuantity = Integer.MIN_VALUE;
+String highestSection = "";
+int highestIndex = -1;
+for (int i = 0; i < sectionA.length; i++) 
+{
+if (sectionA[i] > highestQuantity) 
+{
+highestQuantity = sectionA[i];
+highestSection = "Section A";
+highestIndex = i;
+}
+}
+for (int i = 0; i < sectionB.length; i++) 
+{
+if (sectionB[i] > highestQuantity) 
+{
+highestQuantity = sectionB[i];
+highestSection = "Section B";
+highestIndex = i;
+}
+}
+System.out.println("Section A Total: " + totalA + " | Section B Total: " + totalB + " | Status: " + status + " | Highest Quantity: " + highestQuantity + " (" + highestSection + ", Item " + (highestIndex + 1) + ")");
+}
+public static void main(String[] args) 
+{
+Scanner s = new Scanner(System.in);
+System.out.print("Enter number of items per section: ");
+int n = Integer.parseInt(s.nextLine().trim());
+int[] sectionA = new int[n];
+int[] sectionB = new int[n];
+System.out.println("Enter " + n + " quantities for Section A (space-separated):");
+String[] partsA = s.nextLine().trim().split("\\s+");
+for (int i = 0; i < n; i++) 
+{
+sectionA[i] = Integer.parseInt(partsA[i]);
+}
+System.out.println("Enter " + n + " quantities for Section B (space-separated):");
+String[] partsB = s.nextLine().trim().split("\\s+");
+for (int i = 0; i < n; i++) 
+{
+sectionB[i] = Integer.parseInt(partsB[i]);
+}
+System.out.println();
+analyzeInventory(sectionA, sectionB);
+s.close();
+}
+}
