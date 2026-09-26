@@ -1,0 +1,81 @@
+import java.time.LocalDate;
+import java.util.*;
+abstract class LibraryItem {
+    protected String title;
+    public LibraryItem(String title) {
+        this.title = title;
+    }
+    public String getTitle() {
+        return title;
+    }
+    public abstract int getBorrowingPeriodDays();
+    public String calculateDueDate(LocalDate currentDate) {
+        LocalDate dueDate = currentDate.plusDays(getBorrowingPeriodDays());
+        return dueDate.toString();
+    }
+}
+class Book extends LibraryItem {
+    public Book(String title) {
+        super(title);
+    }
+    public int getBorrowingPeriodDays() {
+        return 14;
+    }
+}
+class DVD extends LibraryItem {
+    public DVD(String title) {
+        super(title);
+    }
+    public int getBorrowingPeriodDays() {
+        return 7;
+    }
+}
+class Magazine extends LibraryItem {
+    public Magazine(String title) {
+        super(title);
+    }
+    public int getBorrowingPeriodDays() {
+        return 3;
+    }
+}
+class Library {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        if (!s.hasNextInt()) 
+		return;
+        int n = s.nextInt();
+        s.nextLine();
+        LocalDate currentDate = LocalDate.of(2023, 10, 26);
+        List<LibraryItem> items = new ArrayList<>();
+		System.out.println("-----------------");
+		System.out.println("LIBRARY BOOK INFO\n");
+		System.out.println("-----------------");
+        for (int i = 0; i < n; i++) {
+            String line = s.nextLine().trim();
+            if (line.isEmpty()) 
+			continue;
+            int firstSpaceIndex = line.indexOf(' ');
+            if (firstSpaceIndex == -1) 
+			continue;
+            String type = line.substring(0, firstSpaceIndex).trim();
+            String rawTitle = line.substring(firstSpaceIndex + 1).trim();
+            if (rawTitle.startsWith("\"") && rawTitle.endsWith("\"") && rawTitle.length() >= 2) {
+                rawTitle = rawTitle.substring(1, rawTitle.length() - 1);
+            }
+            if (type.equalsIgnoreCase("BOOK")) {
+                items.add(new Book(rawTitle));
+            } 
+			else if (type.equalsIgnoreCase("DVD")) {
+                items.add(new DVD(rawTitle));
+            } 
+			else if (type.equalsIgnoreCase("MAGAZINE")) {
+                items.add(new Magazine(rawTitle));
+            }
+        }
+        for (LibraryItem item : items) {
+            String dueDateStr = item.calculateDueDate(currentDate);
+            System.out.println(item.getTitle() + ": " + dueDateStr);
+        }
+        s.close();
+    }
+}
