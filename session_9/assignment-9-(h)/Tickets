@@ -1,0 +1,31 @@
+import java.util.*;
+abstract class Ticket{
+static final double FEE=20;
+abstract double price();
+double amount(int c){return c*(price()+FEE);}
+}
+class Regular extends Ticket{double price(){return 150;}}
+class Premium extends Ticket{double price(){return 250;}}
+class Recliner extends Ticket{double price(){return 400;}}
+public class Tickets{
+static Ticket make(String s){
+switch(s){
+case "REGULAR":return new Regular();
+case "PREMIUM":return new Premium();
+default:return new Recliner();
+}
+}
+public static void main(String[] a){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+double t=0;
+while(n-->0){
+String s=sc.next();
+int c=sc.nextInt();
+double m=make(s).amount(c);
+t+=m;
+System.out.printf("%s: %.2f%n",s,m);
+}
+System.out.printf("Total: %.2f%n",t);
+}
+}
