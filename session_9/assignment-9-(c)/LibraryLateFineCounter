@@ -1,0 +1,52 @@
+import java.util.*;
+import java.util.function.Function;
+abstract class Item {
+    private final String title;
+    protected final double daysLate;
+    Item(String title, double daysLate) { this.title = title; this.daysLate = daysLate; }
+    String getTitle() { return title; }
+    abstract double fine();
+}
+class Book extends Item {
+    Book(String title, double daysLate) { super(title, daysLate); }
+    double fine() { return 2 * daysLate; }
+}
+class Dvd extends Item {
+    Dvd(String title, double daysLate) { super(title, daysLate); }
+    double fine() { return Math.min(5 * daysLate, 50); }
+}
+class Magazine extends Item {
+    Magazine(String title, double daysLate) { super(title, daysLate); }
+    double fine() { return daysLate; }
+}
+class ItemFactory {
+    private static final Map<String, Function<Scanner, Item>> REGISTRY = new HashMap<>();
+    static {
+        REGISTRY.put("BOOK", s -> new Book(s.next(), s.nextDouble()));
+        REGISTRY.put("DVD", s -> new Dvd(s.next(), s.nextDouble()));
+        REGISTRY.put("MAGAZINE", s -> new Magazine(s.next(), s.nextDouble()));
+    }
+    static Item create(Scanner sc) {
+        return REGISTRY.get(sc.next().toUpperCase()).apply(sc);
+    }
+}
+class FinePrinter {
+    static void print(List<Item> items) {
+        double total = 0;
+        for (Item i : items) {
+            double f = i.fine();
+            total += f;
+            System.out.println(String.format(Locale.US, "%s: %.2f", i.getTitle(), f));
+        }
+        System.out.println(String.format(Locale.US, "Total Fines: %.2f", total));
+    }
+}
+public class LibraryLateFineCounter {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        List<Item> items = new ArrayList<>();
+        for (int i = 0; i < n; i++) items.add(ItemFactory.create(sc));
+        FinePrinter.print(items);
+    }
+}
