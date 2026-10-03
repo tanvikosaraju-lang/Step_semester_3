@@ -1,0 +1,52 @@
+import java.util.*;
+import java.util.function.Function;
+abstract class Booking {
+    private static final double BOOKING_FEE = 50;
+    protected final double distance;
+    Booking(double distance) { this.distance = distance; }
+    abstract String getMode();
+    protected abstract double fare();
+    final double total() { return fare() + BOOKING_FEE; }
+}
+class BusBooking extends Booking {
+    BusBooking(double distance) { super(distance); }
+    String getMode() { return "BUS"; }
+    protected double fare() { return 2 * distance; }
+}
+class TrainBooking extends Booking {
+    TrainBooking(double distance) { super(distance); }
+    String getMode() { return "TRAIN"; }
+    protected double fare() { return 1.5 * distance; }
+}
+class FlightBooking extends Booking {
+    FlightBooking(double distance) { super(distance); }
+    String getMode() { return "FLIGHT"; }
+    protected double fare() { return 2500 + 4 * distance; }
+}
+class BookingFactory {
+    private static final Map<String, Function<Scanner, Booking>> REGISTRY = new HashMap<>();
+    static {
+        REGISTRY.put("BUS", s -> new BusBooking(s.nextDouble()));
+        REGISTRY.put("TRAIN", s -> new TrainBooking(s.nextDouble()));
+        REGISTRY.put("FLIGHT", s -> new FlightBooking(s.nextDouble()));
+    }
+    static Booking create(Scanner sc) {
+        return REGISTRY.get(sc.next().toUpperCase()).apply(sc);
+    }
+}
+class BookingPrinter {
+    static void print(List<Booking> bookings) {
+        for (Booking b : bookings) {
+            System.out.println(String.format(Locale.US, "%s: %.2f", b.getMode(), b.total()));
+        }
+    }
+}
+public class TravelBooking {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        List<Booking> bookings = new ArrayList<>();
+        for (int i = 0; i < n; i++) bookings.add(BookingFactory.create(sc));
+        BookingPrinter.print(bookings);
+    }
+}
