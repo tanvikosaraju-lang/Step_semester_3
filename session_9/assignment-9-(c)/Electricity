@@ -1,0 +1,54 @@
+import java.util.*;
+import java.util.function.Function;
+abstract class Connection {
+    protected final double units;
+    Connection(double units) { this.units = units; }
+    abstract String getType();
+    abstract double bill();
+}
+class HomeConnection extends Connection {
+    HomeConnection(double units) { super(units); }
+    String getType() { return "HOME"; }
+    double bill() { return units <= 100 ? units * 5 : 500 + (units - 100) * 7; }
+}
+class ShopConnection extends Connection {
+    ShopConnection(double units) { super(units); }
+    String getType() { return "SHOP"; }
+    double bill() { return units * 8 + 100; }
+}
+class FactoryConnection extends Connection {
+    FactoryConnection(double units) { super(units); }
+    String getType() { return "FACTORY"; }
+    double bill() { return Math.max(units * 6, 1000); }
+}
+class ConnectionFactory {
+    private static final Map<String, Function<Scanner, Connection>> REGISTRY = new HashMap<>();
+    static {
+        REGISTRY.put("HOME", s -> new HomeConnection(s.nextDouble()));
+        REGISTRY.put("SHOP", s -> new ShopConnection(s.nextDouble()));
+        REGISTRY.put("FACTORY", s -> new FactoryConnection(s.nextDouble()));
+    }
+    static Connection create(Scanner sc) {
+        return REGISTRY.get(sc.next().toUpperCase()).apply(sc);
+    }
+}
+class BillPrinter {
+    static void print(List<Connection> connections) {
+        double total = 0;
+        for (Connection c : connections) {
+            double b = c.bill();
+            total += b;
+            System.out.println(String.format(Locale.US, "%s: %.2f", c.getType(), b));
+        }
+        System.out.println(String.format(Locale.US, "Total: %.2f", total));
+    }
+}
+public class Electricity {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        List<Connection> connections = new ArrayList<>();
+        for (int i = 0; i < n; i++) connections.add(ConnectionFactory.create(sc));
+        BillPrinter.print(connections);
+    }
+}

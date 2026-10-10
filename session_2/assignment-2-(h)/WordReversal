@@ -1,0 +1,32 @@
+class WordReversal
+{
+String reverseEachWord(String sentence) 
+{
+String[] words = sentence.split(" ");
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < words.length; i++) 
+{
+String reversedWord = reverseWord(words[i]);
+sb.append(reversedWord);
+if (i < words.length - 1) 
+{
+sb.append(" ");
+}
+}
+return sb.toString();
+}
+private String reverseWord(String word) 
+{
+StringBuilder wb = new StringBuilder();
+for (int i = word.length() - 1; i >= 0; i--) 
+{
+wb.append(word.charAt(i));
+}
+return wb.toString();
+}
+public static void main(String[] args) 
+{
+WordReversal wr = new WordReversal();
+System.out.println(wr.reverseEachWord("hello club"));
+}
+}

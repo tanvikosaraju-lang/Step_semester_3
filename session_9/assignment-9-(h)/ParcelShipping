@@ -1,0 +1,42 @@
+import java.util.*;
+interface Insurable{double insurance(double v);}
+abstract class Parcel{
+abstract double charge(double w);
+}
+class Standard extends Parcel{
+double charge(double w){return 40+10*w;}
+}
+class Express extends Parcel implements Insurable{
+double charge(double w){return 80+15*w;}
+public double insurance(double v){return v*0.02;}
+}
+class Fragile extends Standard implements Insurable{
+double charge(double w){return super.charge(w)+50;}
+public double insurance(double v){return v*0.02;}
+}
+public class ParcelShipping{
+static Parcel make(String s){
+switch(s){
+case "STANDARD":return new Standard();
+case "EXPRESS":return new Express();
+default:return new Fragile();
+}
+}
+public static void main(String[] a){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+double g=0;
+while(n-->0){
+String s=sc.next();
+double w=sc.nextDouble();
+double v=sc.nextDouble();
+Parcel p=make(s);
+double c=p.charge(w);
+double i=p instanceof Insurable?((Insurable)p).insurance(v):0;
+double t=c+i;
+g+=t;
+System.out.printf("%s: Charge=%.2f Insurance=%.2f Total=%.2f%n",s,c,i,t);
+}
+System.out.printf("Grand Total: %.2f%n",g);
+}
+}

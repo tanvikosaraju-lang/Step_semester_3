@@ -1,0 +1,46 @@
+import java.util.*;
+interface BusUser{
+double TRANSPORT=12000;
+default double transport(){return TRANSPORT;}
+}
+abstract class Student{
+String name;
+Student(String n){name=n;}
+abstract double tuition();
+double fee(){return tuition()+(this instanceof BusUser?((BusUser)this).transport():0);}
+}
+class DayScholar extends Student implements BusUser{
+DayScholar(String n){super(n);}
+double tuition(){return 40000;}
+}
+class Hosteller extends Student{
+Hosteller(String n){super(n);}
+double tuition(){return 40000+60000;}
+}
+class Scholar extends DayScholar{
+Scholar(String n){super(n);}
+double tuition(){return super.tuition()/2;}
+}
+public class CollegeFeeCounter{
+static Student make(String t,String n){
+switch(t){
+case "DAY_SCHOLAR":return new DayScholar(n);
+case "HOSTELLER":return new Hosteller(n);
+default:return new Scholar(n);
+}
+}
+public static void main(String[] a){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+double total=0;
+while(n-->0){
+String t=sc.next();
+String nm=sc.next();
+Student s=make(t,nm);
+double f=s.fee();
+total+=f;
+System.out.printf("%s: %.2f%n",s.name,f);
+}
+System.out.printf("Total Collected: %.2f%n",total);
+}
+}

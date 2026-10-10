@@ -1,0 +1,54 @@
+class TransactionReferenceValidator 
+{
+String normalizeReference(String raw) 
+{
+String trimmed = raw.trim();
+if (trimmed.length() <= 3) 
+{
+return trimmed.toUpperCase();
+}
+String bankCodePart = trimmed.substring(0, 3).toUpperCase();
+String remainingPart = trimmed.substring(3);
+return bankCodePart + remainingPart;
+}
+String validateAndFormat(String reference) 
+{
+String normalized = normalizeReference(reference);
+if (normalized.length() != 14) 
+{
+return "Invalid! Reference must be 14 characters.";
+}
+String bankCode = normalized.substring(0, 3);
+String datePart = normalized.substring(3, 9);
+String seqPart = normalized.substring(9, 14);
+for (int i = 0; i < bankCode.length(); i++) 
+{
+if (!Character.isLetter(bankCode.charAt(i))) 
+{
+return "Invalid: bank code must be 3 letters";
+}
+}
+String body = datePart + seqPart;
+for (int i = 0; i < body.length(); i++) 
+{
+if (!Character.isDigit(body.charAt(i))) 
+{
+return "Invalid: reference body must be 11 digits";
+}
+}
+String dd = datePart.substring(0, 2);
+String mm = datePart.substring(2, 4);
+String yy = datePart.substring(4, 6);
+StringBuilder s = new StringBuilder();
+s.append("[").append(bankCode).append("] ");
+s.append("DATE: ").append(dd).append("/").append(mm).append("/").append(yy);
+s.append(" | SEQ: ").append(seqPart);
+return s.toString();
+}
+public static void main(String[] args) 
+{
+TransactionReferenceValidator v = new TransactionReferenceValidator();
+System.out.println(v.validateAndFormat(" hdf03022600042 "));
+System.out.println(v.validateAndFormat("12F03022600042"));
+}
+}

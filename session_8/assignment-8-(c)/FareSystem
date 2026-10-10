@@ -1,0 +1,88 @@
+import java.util.*;
+abstract class Transport {
+    protected String type;
+    protected double distance;
+    public Transport(String type, double distance) {
+        this.type = type;
+        this.distance = distance;
+    }
+    public String getType() {
+        return type;
+    }
+    public abstract double calculateFare();
+}
+class Bus extends Transport {
+    public Bus(double distance) {
+        super("BUS", distance);
+    }
+    public double calculateFare() {
+        double fare = 2 + 0.10 * distance;
+        return Math.min(fare, 10.0);
+    }
+}
+class Train extends Transport {
+    public Train(double distance) {
+        super("TRAIN", distance);
+    }
+    public double calculateFare() {
+        return 3 + 0.15 * distance;
+    }
+}
+class Metro extends Transport {
+    private double peakHourFactor;
+    public Metro(double distance, double peakHourFactor) {
+        super("METRO", distance);
+        this.peakHourFactor = peakHourFactor;
+    }
+    public double calculateFare() {
+        return (1.50 + 0.20 * distance) * peakHourFactor;
+    }
+}
+class TransportFactory {
+    public static Transport createTransport(String type, double distance, double peakHourFactor) {
+        switch (type.trim().toUpperCase()) {
+            case "BUS":
+                return new Bus(distance);
+            case "TRAIN":
+                return new Train(distance);
+            case "METRO":
+                return new Metro(distance, peakHourFactor);
+            default:
+                throw new IllegalArgumentException("Unknown transport type: " + type);
+        }
+    }
+}
+class FareCalculator {
+    private List<Transport> journeys = new ArrayList<>();
+    public void addJourney(Transport t) {
+        journeys.add(t);
+    }
+    public void calculateAll() {
+        double total = 0.0;
+        for (Transport t : journeys) {
+            double fare = t.calculateFare();
+            total += fare;
+            System.out.printf("%s: %.2f%n", t.getType(), fare);
+        }
+        System.out.printf("Total: %.2f%n", total);
+    }
+}
+public class FareSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = Integer.parseInt(sc.nextLine().trim());
+        FareCalculator calculator = new FareCalculator();
+        for (int i = 0; i < n; i++) {
+            String line = sc.nextLine().trim();
+            String[] tokens = line.split("\\s+");
+            String type = tokens[0];
+            double distance = Double.parseDouble(tokens[1]);
+            double peakHourFactor = tokens.length > 2 ? Double.parseDouble(tokens[2]) : 1.0;
+            Transport t = TransportFactory.createTransport(type, distance, peakHourFactor);
+            calculator.addJourney(t);
+        }
+        System.out.println();
+        calculator.calculateAll();
+        sc.close();
+    }
+}

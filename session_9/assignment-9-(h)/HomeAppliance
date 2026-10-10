@@ -1,0 +1,47 @@
+import java.util.*;
+interface Saver{
+default double save(double u){return u*0.75;}
+}
+abstract class Appliance{
+static final double RATE=8;
+abstract double watts();
+double units(double h){return watts()*h/1000;}
+double cost(double u){return u*RATE;}
+}
+class Fridge extends Appliance{double watts(){return 150;}}
+class Ac extends Appliance implements Saver{double watts(){return 1500;}}
+class Tv extends Appliance{double watts(){return 100;}}
+class Washer extends Appliance implements Saver{double watts(){return 500;}}
+public class HomeAppliance{
+static Appliance make(String s){
+switch(s){
+case "FRIDGE":return new Fridge();
+case "AC":return new Ac();
+case "TV":return new Tv();
+default:return new Washer();
+}
+}
+public static void main(String[] a){
+Scanner sc=new Scanner(System.in);
+int n=sc.nextInt();
+sc.nextLine();
+double t=0;
+while(n-->0){
+String[] p=sc.nextLine().trim().split("\\s+");
+Appliance x=make(p[0]);
+double u=x.units(Double.parseDouble(p[1]));
+if(p.length>2){
+if(x instanceof Saver){
+u=((Saver)x).save(u);
+}else{
+System.out.println(p[0]+": saver mode not supported");
+continue;
+}
+}
+double c=x.cost(u);
+t+=c;
+System.out.printf("%s: Units=%.2f Cost=%.2f%n",p[0],u,c);
+}
+System.out.printf("Total Cost: %.2f%n",t);
+}
+}
