@@ -1,0 +1,49 @@
+public class ExamScoreBandCounter {
+
+    public static int countInBand(int[] scores, int low, int high) {
+        if (scores == null || scores.length == 0) {
+            return 0;
+        }
+        int start = findFirstGreaterOrEqual(scores, low);
+        int end = findFirstGreaterThan(scores, high);
+        return end - start;
+    }
+
+    private static int findFirstGreaterOrEqual(int[] scores, int target) {
+        int left = 0;
+        int right = scores.length;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (scores[mid] >= target) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    private static int findFirstGreaterThan(int[] scores, int target) {
+        int left = 0;
+        int right = scores.length;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (scores[mid] > target) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
+    }
+
+    public static void main(String[] args) {
+        int[] scores = {35, 42, 42, 50, 58, 58, 58, 63, 71, 88};
+        
+        int low1 = 42, high1 = 58;
+        System.out.println("Expected: 6, Got: " + countInBand(scores, low1, high1));
+
+        int low2 = 90, high2 = 100;
+        System.out.println("Expected: 0, Got: " + countInBand(scores, low2, high2));
+    }
+}
