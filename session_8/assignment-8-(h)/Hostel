@@ -1,0 +1,26 @@
+import java.util.*;
+import java.util.function.Function;
+class Hostel{
+public static void main(String[]args){
+Scanner sc=new Scanner(System.in);
+int n=Integer.parseInt(sc.nextLine().trim());
+Map<String,Function<double[],Double>>rules=new HashMap<>();
+rules.put("SINGLE",p->p[0]*8.0);
+rules.put("SHARED",p->(p[0]*6.0)/p[1]);
+rules.put("AC",p->p[0]*10.0+200.0);
+double total=0;
+StringBuilder sb=new StringBuilder();
+for(int i=0;i<n;i++){
+String[]parts=sc.nextLine().trim().split("\\s+");
+String type=parts[0];
+double units=Double.parseDouble(parts[1]);
+double occupants=parts.length>2?Double.parseDouble(parts[2]):1.0;
+double bill=rules.get(type).apply(new double[]{units,occupants});
+total+=bill;
+sb.append(type+": "+String.format("%.2f",bill)+"\n");
+}
+sb.append("Total: "+String.format("%.2f",total));
+System.out.println();
+System.out.println(sb.toString());
+}
+}

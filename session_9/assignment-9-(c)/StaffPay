@@ -1,0 +1,54 @@
+import java.util.*;
+import java.util.function.Function;
+abstract class Staff {
+    private final String name;
+    Staff(String name) { this.name = name; }
+    String getName() { return name; }
+    abstract double pay();
+}
+class FullTimeStaff extends Staff {
+    private final double salary;
+    FullTimeStaff(String name, double salary) { super(name); this.salary = salary; }
+    double pay() { return salary; }
+}
+class HourlyStaff extends Staff {
+    private final double hours, rate;
+    HourlyStaff(String name, double hours, double rate) { super(name); this.hours = hours; this.rate = rate; }
+    double pay() { return hours <= 40 ? hours * rate : 40 * rate + (hours - 40) * 1.5 * rate; }
+}
+class InternStaff extends Staff {
+    private final double stipend;
+    InternStaff(String name, double stipend) { super(name); this.stipend = stipend; }
+    double pay() { return stipend; }
+}
+class StaffFactory {
+    private static final Map<String, Function<Scanner, Staff>> REGISTRY = new HashMap<>();
+    static {
+        REGISTRY.put("FULLTIME", s -> new FullTimeStaff(s.next(), s.nextDouble()));
+        REGISTRY.put("HOURLY", s -> new HourlyStaff(s.next(), s.nextDouble(), s.nextDouble()));
+        REGISTRY.put("INTERN", s -> new InternStaff(s.next(), s.nextDouble()));
+    }
+    static Staff create(Scanner sc) {
+        return REGISTRY.get(sc.next().toUpperCase()).apply(sc);
+    }
+}
+class PayrollPrinter {
+    static void print(List<Staff> staff) {
+        double total = 0;
+        for (Staff s : staff) {
+            double p = s.pay();
+            total += p;
+            System.out.println(String.format(Locale.US, "%s: %.2f", s.getName(), p));
+        }
+        System.out.println(String.format(Locale.US, "Total Payroll: %.2f", total));
+    }
+}
+public class StaffPay {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        List<Staff> staff = new ArrayList<>();
+        for (int i = 0; i < n; i++) staff.add(StaffFactory.create(sc));
+        PayrollPrinter.print(staff);
+    }
+}

@@ -1,0 +1,57 @@
+import java.util.*;
+class TypingAccuracyChecker 
+{
+public static void checkTypingAccuracy(String original, String typed) 
+{
+if (original.length() != typed.length()) 
+{
+System.out.println("Error: Strings must be of equal length to compare.");
+return;
+}
+int length = original.length();
+int matchedCount = 0;
+int firstMismatchPosition = -1;
+char originalCharAtMismatch = ' ';
+char typedCharAtMismatch = ' ';
+for (int i = 0; i < length; i++) 
+{
+char originalChar = original.charAt(i);
+char typedChar = typed.charAt(i);
+if (originalChar == typedChar) 
+{
+matchedCount++;
+} 
+else if (firstMismatchPosition == -1) 
+{
+firstMismatchPosition = i + 1;
+originalCharAtMismatch = originalChar;
+typedCharAtMismatch = typedChar;
+}
+}
+double accuracy = ((double) matchedCount / length) * 100;
+StringBuilder result = new StringBuilder();
+result.append("Matched: ").append(matchedCount).append("/").append(length);
+result.append(" | Accuracy: ").append(String.format("%.2f", accuracy)).append("%");
+if (firstMismatchPosition == -1) 
+{
+result.append(" | No Mismatches");
+} 
+else 
+{
+result.append(" | First Mismatch at position ").append(firstMismatchPosition);
+result.append(" ('").append(originalCharAtMismatch).append("' vs '").append(typedCharAtMismatch).append("')");
+}
+System.out.println(result.toString());
+}
+public static void main(String[] args) 
+{
+Scanner s = new Scanner(System.in);
+System.out.print("Enter the original passage: ");
+String original = s.nextLine();
+System.out.print("Enter the typed text: ");
+String typed = s.nextLine();
+System.out.println();
+checkTypingAccuracy(original, typed);
+s.close();
+}
+}
